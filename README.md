@@ -23,7 +23,7 @@
 © 2025 Anand More. All rights reserved.  
 This project is proprietary and protected by copyright law.
 
-📄 Certificate: [https://drive.google.com/file/d/YOUR_FILE_ID/view](https://drive.google.com/file/d/1Di8eHqfpf-oDosmAvz-UYSmD3gAehY22/view?usp=drive_link)
+📄 Certificate: [View Copyright Certificate](https://drive.google.com/file/d/1Di8eHqfpf-oDosmAvz-UYSmD3gAehY22/view?usp=drive_link)
 
 ---
 
