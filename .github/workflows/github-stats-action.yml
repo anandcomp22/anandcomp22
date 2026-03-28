@@ -1,21 +1,144 @@
-name: GitHub Stats
- 
+name: Generate GitHub Stats
+
 on:
   schedule:
-    - cron: "0 */8 * * *"   # runs every 8 hours automatically
+    - cron: "0 */12 * * *"   # every 12 hours
   push:
     branches: [ main, master ]
-  workflow_dispatch:          # allows manual trigger from Actions tab
- 
+  workflow_dispatch:
+
 jobs:
-  build:
+  generate:
     runs-on: ubuntu-latest
     permissions:
       contents: write
- 
+
     steps:
-      - uses: jstrieb/github-stats@master
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
- 
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Generate Stats SVGs
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          USERNAME: anandcomp22
+        run: |
+          mkdir -p generated
+          python3 << 'PYEOF'
+          import requests, os
+
+          token = os.environ["GITHUB_TOKEN"]
+          username = os.environ["USERNAME"]
+          headers = {"Authorization": f"bearer {token}", "Content-Type": "application/json"}
+
+          query = """
+          query($login: String!) {
+            user(login: $login) {
+              repositories(first: 100, ownerAffiliations: OWNER, isFork: false) {
+                nodes {
+                  stargazerCount
+                  languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+                    edges { size node { name color } }
+                  }
+                }
+              }
+              contributionsCollection {
+                totalCommitContributions
+                totalPullRequestContributions
+                totalIssueContributions
+              }
+              followers { totalCount }
+            }
+          }
+          """
+          r = requests.post("https://api.github.com/graphql",
+            json={"query": query, "variables": {"login": username}},
+            headers=headers)
+          data = r.json()["data"]["user"]
+
+          contrib = data["contributionsCollection"]
+          commits   = contrib["totalCommitContributions"]
+          prs       = contrib["totalPullRequestContributions"]
+          issues    = contrib["totalIssueContributions"]
+          stars     = sum(n["stargazerCount"] for n in data["repositories"]["nodes"])
+          followers = data["followers"]["totalCount"]
+
+          lang_sizes = {}
+          for repo in data["repositories"]["nodes"]:
+            for edge in repo["languages"]["edges"]:
+              name  = edge["node"]["name"]
+              color = edge["node"]["color"] or "#858585"
+              if name not in lang_sizes:
+                lang_sizes[name] = {"size": 0, "color": color}
+              lang_sizes[name]["size"] += edge["size"]
+
+          top_langs  = sorted(lang_sizes.items(), key=lambda x: -x[1]["size"])[:6]
+          total_size = sum(v["size"] for _, v in top_langs) or 1
+
+          # ── Overview SVG ──────────────────────────────────────────────
+          overview_svg = f"""<svg width="495" height="200" viewBox="0 0 495 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="495" height="200" rx="10" fill="#1a1b27" stroke="#30363d" stroke-width="1"/>
+            <text x="25" y="35" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" fill="#70a5fd">📊 {username}'s GitHub Stats</text>
+            <line x1="25" y1="45" x2="470" y2="45" stroke="#30363d" stroke-width="1"/>
+            <text x="25"  y="78"  font-family="Segoe UI,sans-serif" font-size="13" fill="#a9b1d6">⭐ Total Stars Earned</text>
+            <text x="470" y="78"  font-family="Segoe UI,sans-serif" font-size="13" font-weight="600" fill="#cdd6f4" text-anchor="end">{stars}</text>
+            <text x="25"  y="108" font-family="Segoe UI,sans-serif" font-size="13" fill="#a9b1d6">🔨 Total Commits (this year)</text>
+            <text x="470" y="108" font-family="Segoe UI,sans-serif" font-size="13" font-weight="600" fill="#cdd6f4" text-anchor="end">{commits}</text>
+            <text x="25"  y="138" font-family="Segoe UI,sans-serif" font-size="13" fill="#a9b1d6">🔀 Pull Requests</text>
+            <text x="470" y="138" font-family="Segoe UI,sans-serif" font-size="13" font-weight="600" fill="#cdd6f4" text-anchor="end">{prs}</text>
+            <text x="25"  y="168" font-family="Segoe UI,sans-serif" font-size="13" fill="#a9b1d6">🐛 Issues Opened</text>
+            <text x="470" y="168" font-family="Segoe UI,sans-serif" font-size="13" font-weight="600" fill="#cdd6f4" text-anchor="end">{issues}</text>
+            <text x="25"  y="193" font-family="Segoe UI,sans-serif" font-size="13" fill="#a9b1d6">👥 Followers</text>
+            <text x="470" y="193" font-family="Segoe UI,sans-serif" font-size="13" font-weight="600" fill="#cdd6f4" text-anchor="end">{followers}</text>
+          </svg>"""
+
+          with open("generated/overview.svg", "w") as f:
+            f.write(overview_svg)
+
+          # ── Languages SVG ─────────────────────────────────────────────
+          bar_width   = 445
+          x_offset    = 0
+          bar_segments = ""
+          lang_rows   = ""
+
+          for i, (name, info) in enumerate(top_langs):
+            pct   = round(info["size"] / total_size * 100, 1)
+            seg_w = round(pct / 100 * bar_width, 1)
+            col   = info["color"]
+            col_x = 25 + (i % 2) * 230
+            row_y = 110 + (i // 2) * 28
+            bar_segments += f'<rect x="{25 + x_offset}" y="68" width="{seg_w}" height="8" fill="{col}" rx="2"/>'
+            x_offset += seg_w
+            lang_rows += f'<circle cx="{col_x+8}" cy="{row_y-4}" r="5" fill="{col}"/><text x="{col_x+18}" y="{row_y}" font-family="Segoe UI,sans-serif" font-size="12" fill="#a9b1d6">{name}</text><text x="{col_x+218}" y="{row_y}" font-family="Segoe UI,sans-serif" font-size="12" font-weight="600" fill="#cdd6f4" text-anchor="end">{pct}%</text>'
+
+          h = 110 + (len(top_langs) // 2 + 1) * 28
+
+          langs_svg = f"""<svg width="495" height="{h}" viewBox="0 0 495 {h}" xmlns="http://www.w3.org/2000/svg">
+            <rect width="495" height="{h}" rx="10" fill="#1a1b27" stroke="#30363d" stroke-width="1"/>
+            <text x="25" y="35" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" fill="#70a5fd">💬 Most Used Languages</text>
+            <line x1="25" y1="45" x2="470" y2="45" stroke="#30363d" stroke-width="1"/>
+            <rect x="25" y="58" width="{bar_width}" height="8" rx="4" fill="#30363d"/>
+            {bar_segments}
+            {lang_rows}
+          </svg>"""
+
+          with open("generated/languages.svg", "w") as f:
+            f.write(langs_svg)
+
+          print("SVGs generated successfully!")
+          PYEOF
+
+      - name: Commit and push SVGs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add generated/
+          git diff --staged --quiet || git commit -m "Update GitHub stats SVGs"
+          git push
