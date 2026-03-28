@@ -138,7 +138,7 @@ Intelligent agriculture decision system with weather prediction, crop recommenda
 
 <div align="center">
 
-<img height="180em" src="https://github-readme-stats.vercel.app/api?username=anandcomp22&show_icons=true&theme=tokyonight&include_all_commits=true&count_private=true&hide_border=true"/>
+<img height="180em" src="https://github-stats-alpha.vercel.app/api?username=anandcomp22&show_icons=true&theme=tokyonight&include_all_commits=true&count_private=true&hide_border=true"/>
 &nbsp;
 <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=anandcomp22&layout=compact&theme=tokyonight&hide_border=true&langs_count=8"/>
 
