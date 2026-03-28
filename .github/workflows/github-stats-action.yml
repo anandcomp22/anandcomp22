@@ -1,0 +1,21 @@
+name: GitHub Stats
+ 
+on:
+  schedule:
+    - cron: "0 */8 * * *"   # runs every 8 hours automatically
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:          # allows manual trigger from Actions tab
+ 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+ 
+    steps:
+      - uses: jstrieb/github-stats@master
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ 
