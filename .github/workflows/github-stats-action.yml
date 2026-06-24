@@ -27,7 +27,7 @@ jobs:
 
       - name: Generate Stats SVGs
         env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: anandcomp22
         run: |
           mkdir -p generated
@@ -58,7 +58,7 @@ jobs:
             }
           }
           """
-          rr = requests.post(
+          r = requests.post(
               "https://api.github.com/graphql",
               json={"query": query, "variables": {"login": username}},
               headers=headers
