@@ -27,7 +27,7 @@ jobs:
 
       - name: Generate Stats SVGs
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           USERNAME: anandcomp22
         run: |
           mkdir -p generated
