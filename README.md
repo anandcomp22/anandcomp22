@@ -159,7 +159,7 @@ Intelligent agriculture decision system with weather prediction, crop recommenda
 | 💼 LinkedIn | [anand-more-4b2887256](https://www.linkedin.com/in/anand-more-4b2887256/) |
 | 🐙 GitHub | [anandcomp22](https://github.com/anandcomp22) |
 | 📧 Email | [moreanand111011@gmail.com](mailto:moreanand111011@gmail.com) |
-| 📄 Resume | [View Resume](https://drive.google.com/file/d/17KHWat426SFcYhNaRLMjo87n6tPNUUxa/view) |
+| 📄 Resume | [View Resume](https://drive.google.com/file/d/1HLkKHVw99NWAC-_JdCX6e3pvDQIWH4Xd/view?usp=sharing) |
 | © Copyright | [View Certificate](https://drive.google.com/file/d/1Di8eHqfpf-oDosmAvz-UYSmD3gAehY22/view?usp=drive_link) |
 
 </div>
