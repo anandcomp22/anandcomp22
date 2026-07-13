@@ -83,7 +83,7 @@
 <tr>
 <td width="50%" valign="top">
 
-### 🏥 MedConnect
+### 🏥 AidME - A GenAI Powered Healthcare Platform
 **Telemedicine & Video Consultation Platform**
 
 A full-stack telemedicine system with real-time video calling, AI diagnostics, and smart scheduling.
