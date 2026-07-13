@@ -12,7 +12,7 @@
 &nbsp;
 [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=flat-square&logo=gmail&logoColor=white)](mailto:moreanand111011@gmail.com)
 &nbsp;
-[![Resume](https://img.shields.io/badge/Resume-4CAF50?style=flat-square&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/17KHWat426SFcYhNaRLMjo87n6tPNUUxa/view)
+[![Resume](https://img.shields.io/badge/Resume-4CAF50?style=flat-square&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1HLkKHVw99NWAC-_JdCX6e3pvDQIWH4Xd/view?usp=sharing)
 
 </div>
 
