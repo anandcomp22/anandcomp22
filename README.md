@@ -161,6 +161,7 @@ Intelligent agriculture decision system with weather prediction, crop recommenda
 | 📧 Email | [moreanand111011@gmail.com](mailto:moreanand111011@gmail.com) |
 | 📄 Resume | [View Resume](https://drive.google.com/file/d/1HLkKHVw99NWAC-_JdCX6e3pvDQIWH4Xd/view?usp=sharing) |
 | © Copyright | [View Certificate](https://drive.google.com/file/d/1Di8eHqfpf-oDosmAvz-UYSmD3gAehY22/view?usp=drive_link) |
+| 📄 Portfolio | [View Portfolio]([https://drive.google.com/file/d/1HLkKHVw99NWAC-_JdCX6e3pvDQIWH4Xd/view?usp=sharing](https://crafted-by-anand-dev.onrender.com/)) |
 
 </div>
 
